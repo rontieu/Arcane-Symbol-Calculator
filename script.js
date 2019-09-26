@@ -208,7 +208,6 @@ function calculate(){
 	arcanaCalculate(arcanaLevelInput.value,Number(arcanaExpInput.value),Math.pow(arcanaLevelInput.value, 2)+11);
 	morassCalculate(morassLevelInput.value,Number(morassExpInput.value),Math.pow(morassLevelInput.value, 2)+11);
 	esferaCalculate(esferaLevelInput.value,Number(esferaExpInput.value),Math.pow(esferaLevelInput.value, 2)+11);
-
 }
 
 

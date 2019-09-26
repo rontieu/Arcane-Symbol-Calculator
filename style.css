@@ -10,3 +10,9 @@ table, td, th {
 #left{
 	text-align: left;
 }
+
+#header-e1 {float: left;
+padding-right: 5px;
+}
+#header-e2 {overflow: hidden;}
+#header-e3 {float: right;}
