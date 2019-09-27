@@ -1,81 +1,73 @@
-var maxLevel = 20;
+const maxLevel = 20;
+const vjDaily = 14;
+const chuchuDaily = 19;
+const arcanaDaily = 18;
+const morassDaily = 8;
+const esferaDaily = 8;
 
-var vjDaily = 14;
-var vjLevelInput = document.getElementById("vjlvl");
-var vjExpInput=document.getElementById("vjexp");
+let vjLevelInput = document.getElementById("vjlvl");
+let vjExpInput=document.getElementById("vjexp");
 
-var chuchuDaily = 19;
-var chuchuLevelInput = document.getElementById("chuchulvl");
-var chuchuExpInput = document.getElementById("chuchuexp");
+let chuchuLevelInput = document.getElementById("chuchulvl");
+let chuchuExpInput = document.getElementById("chuchuexp");
 
-var lachFloor = document.getElementById("lachfloor");
-var lachLevelInput = document.getElementById("lachlvl");
-var lachExpInput=document.getElementById("lachexp");
+let lachFloor = document.getElementById("lachfloor");
+let lachLevelInput = document.getElementById("lachlvl");
+let lachExpInput=document.getElementById("lachexp");
 
-var arcanaDaily = 18;
-var arcanaLevelInput = document.getElementById("arcanalvl");
-var arcanaExpInput = document.getElementById("arcanaexp");
+let arcanaLevelInput = document.getElementById("arcanalvl");
+let arcanaExpInput = document.getElementById("arcanaexp");
 
-var morassDaily = 8;
-var morassLevelInput = document.getElementById("morasslvl");
-var morassExpInput = document.getElementById("morassexp");
+let morassLevelInput = document.getElementById("morasslvl");
+let morassExpInput = document.getElementById("morassexp");
 
-var esferaDaily = 8;
-var esferaLevelInput = document.getElementById("esferalvl");
-var esferaExpInput = document.getElementById("esferaexp");
+let esferaLevelInput = document.getElementById("esferalvl");
+let esferaExpInput = document.getElementById("esferaexp");
 
-var button=document.getElementById("enter");
+let button=document.getElementById("enter");
 
-function vjMesoCalc(a){
-	var i=a;
-	var totalMeso=0;
-	while (i<maxLevel){
+const vjMesoCalc = (currentLevel) => { 
+	let totalMeso=0;
+	for (i=currentLevel;i<maxLevel;i++){
 		totalMeso += (2370000 + (7130000*i));
-		i++;
 	}
 	return totalMeso;
 }
-
-function MesoCalc(a){
-	var i=a;
-	var totalMeso=0;
-	while (i<maxLevel){
+const MesoCalc = (currentLevel) => { 
+	let totalMeso=0;
+	for (i=currentLevel;i<maxLevel;i++){
 		totalMeso += (12440000 + (6600000*i));
-		i++;
 	}
 	return totalMeso;
 }
 
-function SymbolsCalc(a,b,c){
-	var i = a;
-	var currentExp = b;
-	var totalSymbol = 0;
-	var limit = c;
-	var daysLeft;
-	while (i<20){
+const SymbolsCalc = (currentLevel,currentExp) => { 
+	let totalSymbol = 0;
+	for (i=currentLevel;i<maxLevel;i++){
 		totalSymbol += (Math.pow(i, 2)+11);
-		i++;
 	}
 	totalSymbol -= currentExp;
 	return totalSymbol;
 }
 
-function vjCalculate(a,b,c){
-	var currentLevel = a;
-	var currentExp = b;
-	var limit = c;
+const inputTable = (daysLeft,totalMeso,totalSymbol,num) =>{
+		let table = document.getElementById("table"),
+		tr = table.getElementsByTagName('tr')[num];
+		td = tr.getElementsByTagName('td')[1];
+		td.innerHTML = daysLeft;
+		td = tr.getElementsByTagName('td')[2];
+		td.innerHTML = totalMeso;
+		td = tr.getElementsByTagName('td')[3];
+		td.innerHTML = totalSymbol;
+}
+
+
+const vjCalculate = (currentLevel,currentExp,limit) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		var totalMeso = vjMesoCalc(currentLevel);
-		var totalSymbol = SymbolsCalc(currentLevel,currentExp,limit);
-		var daysLeft = Math.ceil(totalSymbol/vjDaily);
-		var table = document.getElementById("table"),
-		tr = table.getElementsByTagName('tr')[1];
-     	td = tr.getElementsByTagName('td')[1];
-      	td.innerHTML = daysLeft;
-      	td = tr.getElementsByTagName('td')[2];
-      	td.innerHTML = totalMeso;
-      	td = tr.getElementsByTagName('td')[3];
-      	td.innerHTML = totalSymbol;
+		let totalMeso = vjMesoCalc(currentLevel);
+		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+		let daysLeft = Math.ceil(totalSymbol/vjDaily);
+		inputTable(daysLeft,totalMeso,totalSymbol,1);
 	}
 	else{
 		alert("input error @ vj");
@@ -83,73 +75,42 @@ function vjCalculate(a,b,c){
 	}
 }
 
-
-
-
-function chuchuCalculate(a,b,c){
-	var currentLevel = a;
-	var currentExp = b;
-	var limit = c;
+const chuchuCalculate = (currentLevel,currentExp,limit) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		var totalMeso = MesoCalc(currentLevel);
-		var totalSymbol = SymbolsCalc(currentLevel,currentExp,limit);
-		var daysLeft = Math.ceil(totalSymbol/chuchuDaily);
-		tr = table.getElementsByTagName('tr')[2];
-     	td = tr.getElementsByTagName('td')[1];
-      	td.innerHTML = daysLeft;
-      	td = tr.getElementsByTagName('td')[2];
-      	td.innerHTML = totalMeso;
-      	td = tr.getElementsByTagName('td')[3];
-      	td.innerHTML = totalSymbol;	
-    }
+		let totalMeso = MesoCalc(currentLevel);
+		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+		let daysLeft = Math.ceil(totalSymbol/chuchuDaily);
+		inputTable(daysLeft,totalMeso,totalSymbol,2);
+	}
 	else{
 		alert("input error @ chuchu");
 		return -1;
 	}
 }
 
-function lachCalculate(a,b,c,d){
-	var currentLevel = a;
-	var currentExp = b;
-	var limit = c;
-	var floor = d;
+const lachCalculate = (currentLevel,currentExp,limit,floor) => { 
 	if (floor>167){
 		floor = (500/3);
 	}
-	var lachDaily = floor*3/30+5;
+	let lachDaily = floor*3/30+5;
 	if(currentExp >= 0 && floor >= 0 && currentExp<limit){
-		var totalMeso = MesoCalc(currentLevel);
-		var totalSymbol = SymbolsCalc(currentLevel,currentExp,limit);
-		var daysLeft = Math.ceil(totalSymbol/lachDaily);
-		tr = table.getElementsByTagName('tr')[3];
-     	td = tr.getElementsByTagName('td')[1];
-      	td.innerHTML = daysLeft;
-      	td = tr.getElementsByTagName('td')[2];
-      	td.innerHTML = totalMeso;
-      	td = tr.getElementsByTagName('td')[3];
-      	td.innerHTML = totalSymbol;	
-    }
+		let totalMeso = MesoCalc(currentLevel);
+		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+		let daysLeft = Math.ceil(totalSymbol/lachDaily);
+		inputTable(daysLeft,totalMeso,totalSymbol,3);
+	}
 	else{
 		alert("input error @ lach");
 		return -1;
 	}
 }
 
-function arcanaCalculate(a,b,c){
-	var currentLevel = a;
-	var currentExp = b;
-	var limit = c;
+const arcanaCalculate = (currentLevel,currentExp,limit) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		var totalMeso = MesoCalc(currentLevel);
-		var totalSymbol = SymbolsCalc(currentLevel,currentExp,limit);
-		var daysLeft = Math.ceil(totalSymbol/arcanaDaily);
-		tr = table.getElementsByTagName('tr')[4];
-     	td = tr.getElementsByTagName('td')[1];
-      	td.innerHTML = daysLeft;
-      	td = tr.getElementsByTagName('td')[2];
-      	td.innerHTML = totalMeso;
-      	td = tr.getElementsByTagName('td')[3];
-      	td.innerHTML = totalSymbol;	
+		let totalMeso = MesoCalc(currentLevel);
+		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+		let daysLeft = Math.ceil(totalSymbol/arcanaDaily);
+		inputTable(daysLeft,totalMeso,totalSymbol,4);
 	}
 	else{
 		alert("input error @ arcana");
@@ -157,45 +118,27 @@ function arcanaCalculate(a,b,c){
 	}
 }
 
-function morassCalculate(a,b,c){
-	var currentLevel = a;
-	var currentExp = b;
-	var limit = c;
+const morassCalculate = (currentLevel,currentExp,limit) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		var totalMeso = MesoCalc(currentLevel);
-		var totalSymbol = SymbolsCalc(currentLevel,currentExp,limit);
-		var daysLeft = Math.ceil(totalSymbol/morassDaily);
-		tr = table.getElementsByTagName('tr')[5];
-     	td = tr.getElementsByTagName('td')[1];
-      	td.innerHTML = daysLeft;
-      	td = tr.getElementsByTagName('td')[2];
-      	td.innerHTML = totalMeso;
-      	td = tr.getElementsByTagName('td')[3];
-      	td.innerHTML = totalSymbol;
-    }	
+		let totalMeso = MesoCalc(currentLevel);
+		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+		let daysLeft = Math.ceil(totalSymbol/morassDaily);
+		inputTable(daysLeft,totalMeso,totalSymbol,5);
+	}	
 	else{
 		alert("input error @ morass");
 		return -1;
 	}
 }
 
-function esferaCalculate(a,b,c){
-	var currentLevel = a;
-	var currentExp = b;
-	var limit = c;
+const esferaCalculate = (currentLevel,currentExp,limit) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		var totalMeso = MesoCalc(currentLevel);
-		var totalSymbol = SymbolsCalc(currentLevel,currentExp,limit);
-		var daysLeft = Math.ceil(totalSymbol/esferaDaily);
-		tr = table.getElementsByTagName('tr')[6];
-     	td = tr.getElementsByTagName('td')[1];
-      	td.innerHTML = daysLeft;
-      	td = tr.getElementsByTagName('td')[2];
-      	td.innerHTML = totalMeso;
-      	td = tr.getElementsByTagName('td')[3];
-      	td.innerHTML = totalSymbol;	
-    }
-    else{
+		let totalMeso = MesoCalc(currentLevel);
+		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+		let daysLeft = Math.ceil(totalSymbol/esferaDaily);
+		inputTable(daysLeft,totalMeso,totalSymbol,6);
+	}
+	else{
 		alert("input error @ esfera");
 		return -1;
 	}
@@ -209,8 +152,6 @@ function calculate(){
 	morassCalculate(morassLevelInput.value,Number(morassExpInput.value),Math.pow(morassLevelInput.value, 2)+11);
 	esferaCalculate(esferaLevelInput.value,Number(esferaExpInput.value),Math.pow(esferaLevelInput.value, 2)+11);
 }
-
-
 
 
 button.addEventListener("click", calculate);
