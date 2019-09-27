@@ -1,30 +1,24 @@
 const maxLevel = 20;
-const vjDaily = 14;
-const chuchuDaily = 19;
-const arcanaDaily = 18;
-const morassDaily = 8;
-const esferaDaily = 8;
+const area = [0,1,2,3,4,5]
+let dailyCount = [14, 19, 0, 18, 8, 8]
 
 let vjLevelInput = document.getElementById("vjlvl");
-let vjExpInput=document.getElementById("vjexp");
-
 let chuchuLevelInput = document.getElementById("chuchulvl");
-let chuchuExpInput = document.getElementById("chuchuexp");
-
-let lachFloor = document.getElementById("lachfloor");
 let lachLevelInput = document.getElementById("lachlvl");
-let lachExpInput=document.getElementById("lachexp");
-
 let arcanaLevelInput = document.getElementById("arcanalvl");
-let arcanaExpInput = document.getElementById("arcanaexp");
-
 let morassLevelInput = document.getElementById("morasslvl");
-let morassExpInput = document.getElementById("morassexp");
-
 let esferaLevelInput = document.getElementById("esferalvl");
+
+let vjExpInput=document.getElementById("vjexp");
+let chuchuExpInput = document.getElementById("chuchuexp");
+let lachExpInput=document.getElementById("lachexp");
+let arcanaExpInput = document.getElementById("arcanaexp");
+let morassExpInput = document.getElementById("morassexp");
 let esferaExpInput = document.getElementById("esferaexp");
 
-let button=document.getElementById("enter");
+let lachFloor = document.getElementById("lachfloor");
+
+let button = document.getElementById("enter");
 
 const vjMesoCalc = (currentLevel) => { 
 	let totalMeso=0;
@@ -33,6 +27,7 @@ const vjMesoCalc = (currentLevel) => {
 	}
 	return totalMeso;
 }
+
 const MesoCalc = (currentLevel) => { 
 	let totalMeso=0;
 	for (i=currentLevel;i<maxLevel;i++){
@@ -50,24 +45,46 @@ const SymbolsCalc = (currentLevel,currentExp) => {
 	return totalSymbol;
 }
 
-const inputTable = (daysLeft,totalMeso,totalSymbol,num) =>{
-		let table = document.getElementById("table"),
-		tr = table.getElementsByTagName('tr')[num];
-		td = tr.getElementsByTagName('td')[1];
-		td.innerHTML = daysLeft;
-		td = tr.getElementsByTagName('td')[2];
-		td.innerHTML = totalMeso;
-		td = tr.getElementsByTagName('td')[3];
-		td.innerHTML = totalSymbol;
+const validInput = (currentExp,limit) => {
+	let valid = (currentExp >= 0 && currentExp<limit)?true:false
+	return valid;
 }
 
+const lachValidInput = (currentExp,limit,floor) => {
+	console.log (currentExp,limit,floor)
+	let valid = (validInput(currentExp,limit) && floor >=0)?true:false
+	return valid;
+}
 
-const vjCalculate = (currentLevel,currentExp,limit) => { 
-	if(currentExp >= 0 && currentExp<limit){
-		let totalMeso = vjMesoCalc(currentLevel);
-		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
-		let daysLeft = Math.ceil(totalSymbol/vjDaily);
-		inputTable(daysLeft,totalMeso,totalSymbol,1);
+const inputTable = (daysLeft,totalMeso,totalSymbol,id) =>{
+	let input = [daysLeft,totalMeso,totalSymbol];
+	let table = document.getElementById("table"),
+	tr = table.getElementsByTagName('tr')[id+1];
+	for(i=1;i<=3;i++){
+		td = tr.getElementsByTagName('td')[i];
+		td.innerHTML = input[i-1];
+	}
+}
+
+const calculations = (currentLevel,currentExp,area) =>{
+	let id = area;
+	let totalMeso = (id === 0)?vjMesoCalc(currentLevel): MesoCalc(currentLevel);
+	let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+	let daysLeft = Math.ceil(totalSymbol/dailyCount[area]);
+	inputTable(daysLeft,totalMeso,totalSymbol,id);
+}
+
+const lachcalculations = (currentLevel,currentExp,area,dailyCount) =>{
+	let id = area;
+	let totalMeso = (id === 0)?vjMesoCalc(currentLevel): MesoCalc(currentLevel);
+	let totalSymbol = SymbolsCalc(currentLevel,currentExp);
+	let daysLeft = Math.ceil(totalSymbol/dailyCount);
+	inputTable(daysLeft,totalMeso,totalSymbol,id);
+}
+
+const vjCalculate = (currentLevel = vjLevelInput.value,currentExp = Number(vjExpInput.value),limit = Math.pow(vjLevelInput.value, 2)+11) => { 
+	if(validInput(currentExp,limit)){
+		calculations(currentLevel,currentExp,area[0]);
 	}
 	else{
 		alert("input error @ vj");
@@ -75,12 +92,9 @@ const vjCalculate = (currentLevel,currentExp,limit) => {
 	}
 }
 
-const chuchuCalculate = (currentLevel,currentExp,limit) => { 
-	if(currentExp >= 0 && currentExp<limit){
-		let totalMeso = MesoCalc(currentLevel);
-		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
-		let daysLeft = Math.ceil(totalSymbol/chuchuDaily);
-		inputTable(daysLeft,totalMeso,totalSymbol,2);
+const chuchuCalculate = (currentLevel = chuchuLevelInput.value,currentExp = Number(chuchuExpInput.value),limit = Math.pow(chuchuLevelInput.value, 2)+11) => { 
+	if(validInput(currentExp,limit)){
+		calculations(currentLevel,currentExp,area[1]);
 	}
 	else{
 		alert("input error @ chuchu");
@@ -88,16 +102,11 @@ const chuchuCalculate = (currentLevel,currentExp,limit) => {
 	}
 }
 
-const lachCalculate = (currentLevel,currentExp,limit,floor) => { 
-	if (floor>167){
-		floor = (500/3);
-	}
-	let lachDaily = floor*3/30+5;
-	if(currentExp >= 0 && floor >= 0 && currentExp<limit){
-		let totalMeso = MesoCalc(currentLevel);
-		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
-		let daysLeft = Math.ceil(totalSymbol/lachDaily);
-		inputTable(daysLeft,totalMeso,totalSymbol,3);
+const lachCalculate = (currentLevel = lachLevelInput.value,currentExp = Number(lachExpInput.value),limit = Math.pow(lachLevelInput.value, 2)+11,floor=lachFloor.value) => { 
+	if (floor>=167) floor = (500/3);
+	let dailyCount = floor*3/30+5;
+	if(lachValidInput(currentExp,limit,floor)){
+		lachcalculations(currentLevel,currentExp,area[2],dailyCount);
 	}
 	else{
 		alert("input error @ lach");
@@ -105,12 +114,9 @@ const lachCalculate = (currentLevel,currentExp,limit,floor) => {
 	}
 }
 
-const arcanaCalculate = (currentLevel,currentExp,limit) => { 
+const arcanaCalculate = (currentLevel = arcanaLevelInput.value,currentExp = Number(arcanaExpInput.value),limit = Math.pow(arcanaLevelInput.value, 2)+11) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		let totalMeso = MesoCalc(currentLevel);
-		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
-		let daysLeft = Math.ceil(totalSymbol/arcanaDaily);
-		inputTable(daysLeft,totalMeso,totalSymbol,4);
+		calculations(currentLevel,currentExp,area[3]);
 	}
 	else{
 		alert("input error @ arcana");
@@ -118,12 +124,9 @@ const arcanaCalculate = (currentLevel,currentExp,limit) => {
 	}
 }
 
-const morassCalculate = (currentLevel,currentExp,limit) => { 
+const morassCalculate = (currentLevel = morassLevelInput.value,currentExp = Number(morassExpInput.value),limit = Math.pow(morassLevelInput.value, 2)+11) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		let totalMeso = MesoCalc(currentLevel);
-		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
-		let daysLeft = Math.ceil(totalSymbol/morassDaily);
-		inputTable(daysLeft,totalMeso,totalSymbol,5);
+		calculations(currentLevel,currentExp,area[4]);
 	}	
 	else{
 		alert("input error @ morass");
@@ -131,12 +134,9 @@ const morassCalculate = (currentLevel,currentExp,limit) => {
 	}
 }
 
-const esferaCalculate = (currentLevel,currentExp,limit) => { 
+const esferaCalculate = (currentLevel = esferaLevelInput.value,currentExp = Number(esferaExpInput.value),limit = Math.pow(esferaLevelInput.value, 2)+11) => { 
 	if(currentExp >= 0 && currentExp<limit){
-		let totalMeso = MesoCalc(currentLevel);
-		let totalSymbol = SymbolsCalc(currentLevel,currentExp);
-		let daysLeft = Math.ceil(totalSymbol/esferaDaily);
-		inputTable(daysLeft,totalMeso,totalSymbol,6);
+		calculations(currentLevel,currentExp,area[5]);
 	}
 	else{
 		alert("input error @ esfera");
@@ -145,12 +145,12 @@ const esferaCalculate = (currentLevel,currentExp,limit) => {
 }
 
 function calculate(){
-	vjCalculate(vjLevelInput.value,Number(vjExpInput.value),Math.pow(vjLevelInput.value, 2)+11);
-	chuchuCalculate(chuchuLevelInput.value,Number(chuchuExpInput.value),Math.pow(chuchuLevelInput.value, 2)+11);
-	lachCalculate(lachLevelInput.value,Number(lachExpInput.value),Math.pow(lachLevelInput.value, 2)+11,lachFloor.value);
-	arcanaCalculate(arcanaLevelInput.value,Number(arcanaExpInput.value),Math.pow(arcanaLevelInput.value, 2)+11);
-	morassCalculate(morassLevelInput.value,Number(morassExpInput.value),Math.pow(morassLevelInput.value, 2)+11);
-	esferaCalculate(esferaLevelInput.value,Number(esferaExpInput.value),Math.pow(esferaLevelInput.value, 2)+11);
+	vjCalculate();
+	chuchuCalculate();
+	lachCalculate();
+	arcanaCalculate();
+	morassCalculate();
+	esferaCalculate();
 }
 
 
