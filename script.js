@@ -39,7 +39,7 @@ const MesoCalc = (currentLevel) => {
 const SymbolsCalc = (currentLevel,currentExp) => { 
 	let totalSymbol = 0;
 	for (i=currentLevel;i<maxLevel;i++){
-		totalSymbol += (Math.pow(i, 2)+11);
+		totalSymbol += (i**2+11);
 	}
 	totalSymbol -= currentExp;
 	return totalSymbol;
