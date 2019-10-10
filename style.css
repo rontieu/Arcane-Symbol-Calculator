@@ -1,13 +1,10 @@
 #header-e1 {float: right;
-padding-right: 5px;
-padding-left: 10px;
+padding-left: 20px;
 }
 
 #header-e2 {float:right;
-padding:left 5px;
 }
 
 #header-e3 {float:right;
-padding:right 50px;
-padding:left 50px;
+	padding: 0px 20px;
 }
