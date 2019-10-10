@@ -1,248 +1,223 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>Arcane Symbols Calculator</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+  <div id="header-e1">
+      <a href="https://github.com/rontieu/arcane-symbol-calculator">Github</a>
+  </div>
+  <div id="header-e2">
+      <a href="./about.html">About</a>
+  </div>
+
+    <div ng-app="symbolsApp" ng-controller="symbolsCtrl">
+      <div class="container-fluid">
+        <h1>MapleStory Arcane Power Calculator</h1>
+          Total AP: {{ totalAP() }}
 </head>
-<body>
-	<header>
-	<div id="header-e1">
-   		<a href="./about.html">About</a>
-	</div>
-	<div id="header-e3">
-   		<a href="#">Symbol Calculator</a>
-	</div>
-	<div id="header-e2">
-  		<a href="https://github.com/rontieu/arcane-symbol-calculator">Github</a>
-	</div>
-	</header>
+  
 
-	<h1>Arcane Symbols Calculator</h1>
-	<div id="Symbol" style="text-align: left">
-  		<img style="vertical-align:middle" src="img/vjsymbol.png" alt="">
-  		<span style="vertical-align:middle">Level</span>
-  		<select name="symbollevel" required="true" style="vertical-align:middle" class="input" id = "vjlvl">
-  		  	<option value="1">1</option>
- 			<option value="2">2</option>
-  			<option value="3">3</option>
-  			<option value="4">4</option>
-  			<option value="5">5</option>
-  			<option value="6">6</option>
-  			<option value="7">7</option>
-  			<option value="8">8</option>
-  			<option value="9">9</option>
-  			<option value="10">10</option>
-  			<option value="11">11</option>
-  			<option value="12">12</option>
-  			<option value="13">13</option>
-  			<option value="14">14</option>
-  			<option value="15">15</option>
-  			<option value="16">16</option>
-  			<option value="17">17</option>
-  			<option value="18">18</option>
-  			<option value="19">19</option>
-  			<option value="20">20</option>
-  		</select>
-  		<span style="vertical-align:middle">Current Experience</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "vjexp"/>
-	</div>
+  <div class="row">
+  
+  <!-- Vanishing Journey -->
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <h3><img src="img/vjsymbol.png" /> VJ</h3>
+    <p class="alert alert-info">14 symbols per day (from dailies)</p>
+    <div class="row">
+    <div class="col-md-6">
+      Symbol level:
+      <input ng-model="symbols.vj.level" type="number"  class="form-control symbol-input" placeholder="Symbol level"/>
+      </div>
+      <div class="col-md-6">
+        Symbol exp:
+        <input ng-model="symbols.vj.exp" type="number" class="form-control symbol-input" placeholder="Symbol EXP" />
+      </div>
+    </div>
+    <br />    
+    <table class="table table-striped" ng-show="symbols.vj.level > 0 && symbols.vj.level <= 20">
+      <tr>
+        <th>Level</th>
+        <th>Exp</th>
+        <th>Days left</th>
+      </tr>
+      <tr ng-repeat="(i, exp) in symbol.exp" ng-show="(i+1) > symbols.vj.level">
+        <td>{{ i + 1 }}</td>
+        <td>{{ exp }}</td>
+        <td>{{ Math.ceil((exp - cummulativeExp(symbols.vj)) / symbols.vj.perDay) }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <!-- Chu Chu Island -->
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <h3><img src="img/chuchusymbol.png" /> Chuchu</h3>
+    <p class="alert alert-info">19 symbols per day (from dailies)</p>
+    <div class="row">
+    <div class="col-md-6">
+      Symbol level:
+      <input ng-model="symbols.chuchu.level" type="number"  class="form-control symbol-input" placeholder="Symbol level"/>
+      </div>
+      <div class="col-md-6">
+        Symbol exp:
+        <input ng-model="symbols.chuchu.exp" type="number" class="form-control symbol-input" placeholder="Symbol EXP" />
+      </div>
+    </div>
+    <br />  
+    <table class="table table-striped" ng-show="symbols.chuchu.level > 0 && symbols.chuchu.level <= 20">
+      <tr>
+        <th>Level</th>
+        <th>Exp</th>
+        <th>Days left</th>
+      </tr>
+      <tr ng-repeat="(i, exp) in symbol.exp" ng-show="(i+1) > symbols.chuchu.level">
+        <td>{{ i + 1 }}</td>
+        <td>{{ exp }}</td>
+        <td>{{ Math.ceil((exp - cummulativeExp(symbols.chuchu)) / symbols.chuchu.perDay) }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <!-- Lachelein -->
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <h3><img src="img/lachsymbol.png" /> Lach</h3>
+    <div class="alert alert-info form-group">
+      Floor:
+      <input ng-model="symbols.lach.floor" type="number" class="form-control input-sm" id="inputsm" placeholder="Symbol level"/>
+    </div>
 
-	<div id="Symbol" style="text-align: left">
-  		<img style="vertical-align:middle" src="img/chuchusymbol.png" alt="">
-  		<span style="vertical-align:middle">Level</span>
-  		<select name="symbollevel" required="true" style="vertical-align:middle" class="input" id = "chuchulvl">
-  		  	<option value="1">1</option>
- 			<option value="2">2</option>
-  			<option value="3">3</option>
-  			<option value="4">4</option>
-  			<option value="5">5</option>
-  			<option value="6">6</option>
-  			<option value="7">7</option>
-  			<option value="8">8</option>
-  			<option value="9">9</option>
-  			<option value="10">10</option>
-  			<option value="11">11</option>
-  			<option value="12">12</option>
-  			<option value="13">13</option>
-  			<option value="14">14</option>
-  			<option value="15">15</option>
-  			<option value="16">16</option>
-  			<option value="17">17</option>
-  			<option value="18">18</option>
-  			<option value="19">19</option>
-  			<option value="20">20</option>
-  		</select>
-  		<span style="vertical-align:middle">Current Experience</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "chuchuexp"/>
-	</div>
+    <div class="row">
+      <div class="col-sm-6">
+        Symbol level:
+        <input ng-model="symbols.lach.level" type="number" class="form-control" placeholder="Symbol level"/>
+      </div>
+      <div class="col-sm-6">
+        Symbol exp:
+        <input ng-model="symbols.lach.exp" type="number" class="form-control" placeholder="Symbol EXP" />
+      </div>
+    </div>
+    <br /> 
+    <table class="table table-striped" ng-show="symbols.lach.level > 0 && symbols.lach.level <= 20">
+      <tr>
+        <th>Level</th>
+        <th>Exp</th>
+        <th>Days left</th>
+      </tr>
+      <tr ng-repeat="(i, exp) in symbol.exp" ng-show="(i+1) > symbols.lach.level">
+        <td>{{ i + 1 }}</td>
+        <td>{{ exp }}</td>
+        <td>{{ Math.ceil((exp - cummulativeExp(symbols.lach)) / ((symbols.lach.floor*3/30)+5)) }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <!-- Arcana -->
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <h3><img src="img/arcanasymbol.png" /> Arcana</h3>
+    <p class="alert alert-info">18 symbols per day (from dailies)</p>
+    <div class="row">
+    <div class="col-md-6">
+      Symbol level:
+      <input ng-model="symbols.arcana.level" type="number"  class="form-control symbol-input" placeholder="Symbol level"/>
+      </div>
+      <div class="col-md-6">
+        Symbol exp:
+        <input ng-model="symbols.arcana.exp" type="number" class="form-control symbol-input" placeholder="Symbol EXP" />
+      </div>
+    </div>
+    <br />
+    <table class="table table-striped" ng-show="symbols.arcana.level > 0 && symbols.arcana.level <= 20">
+      <tr>
+        <th>Level</th>
+        <th>Exp</th>
+        <th>Days left</th>
+      </tr>
+      <tr ng-repeat="(i, exp) in symbol.exp" ng-show="(i+1) > symbols.arcana.level">
+        <td>{{ i + 1 }}</td>
+        <td>{{ exp }}</td>
+        <td>{{ Math.ceil((exp - cummulativeExp(symbols.arcana)) / symbols.arcana.perDay) }}</td>
+      </tr>
+    </table>
+  </div>
 
-	<div id="Symbol" style="text-align: left">
-  		<img style="vertical-align:middle" src="img/lachsymbol.png" alt="">
-  		<span style="vertical-align:middle">Level</span>
-  		<select name="symbollevel" required="true" style="vertical-align:middle" class="input" id = "lachlvl">
-  		  	<option value="1">1</option>
- 			<option value="2">2</option>
-  			<option value="3">3</option>
-  			<option value="4">4</option>
-  			<option value="5">5</option>
-  			<option value="6">6</option>
-  			<option value="7">7</option>
-  			<option value="8">8</option>
-  			<option value="9">9</option>
-  			<option value="10">10</option>
-  			<option value="11">11</option>
-  			<option value="12">12</option>
-  			<option value="13">13</option>
-  			<option value="14">14</option>
-  			<option value="15">15</option>
-  			<option value="16">16</option>
-  			<option value="17">17</option>
-  			<option value="18">18</option>
-  			<option value="19">19</option>
-  			<option value="20">20</option>
-  		</select>
-  		<span style="vertical-align:middle">Current Experience</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "lachexp"/>
-  		<span style="vertical-align:middle">Tower Floor</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "lachfloor"/>
-	</div>
+  <!-- Morass -->
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <h3><img src="img/morasssymbol.png" /> Morass</h3>
+    <p class="alert alert-info">8 symbols per day (from dailies)</p>
+    <div class="row">
+    <div class="col-md-6">
+      Symbol level:
+      <input ng-model="symbols.morass.level" type="number"  class="form-control symbol-input" placeholder="Symbol level"/>
+      </div>
+      <div class="col-md-6">
+        Symbol exp:
+        <input ng-model="symbols.morass.exp" type="number" class="form-control symbol-input" placeholder="Symbol EXP" />
+      </div>
+    </div>
+    <br />
+    <table class="table table-striped" ng-show="symbols.morass.level > 0 && symbols.morass.level <= 20">
+      <tr>
+        <th>Level</th>
+        <th>Exp</th>
+        <th>Days left</th>
+      </tr>
+      <tr ng-repeat="(i, exp) in symbol.exp" ng-show="(i+1) > symbols.morass.level">
+        <td>{{ i + 1 }}</td>
+        <td>{{ exp }}</td>
+        <td>{{ Math.ceil((exp - cummulativeExp(symbols.morass)) / symbols.morass.perDay) }}</td>
+      </tr>
+    </table>
+  </div>
 
-	<div id="Symbol" style="text-align: left">
-  		<img style="vertical-align:middle" src="img/arcanasymbol.png" alt="">
-  		<span style="vertical-align:middle">Level</span>
-  		<select name="symbollevel" required="true" style="vertical-align:middle" class="input" id = "arcanalvl">
-  		  	<option value="1">1</option>
- 			<option value="2">2</option>
-  			<option value="3">3</option>
-  			<option value="4">4</option>
-  			<option value="5">5</option>
-  			<option value="6">6</option>
-  			<option value="7">7</option>
-  			<option value="8">8</option>
-  			<option value="9">9</option>
-  			<option value="10">10</option>
-  			<option value="11">11</option>
-  			<option value="12">12</option>
-  			<option value="13">13</option>
-  			<option value="14">14</option>
-  			<option value="15">15</option>
-  			<option value="16">16</option>
-  			<option value="17">17</option>
-  			<option value="18">18</option>
-  			<option value="19">19</option>
-  			<option value="20">20</option>
-  		</select>
-  		<span style="vertical-align:middle">Current Experience</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "arcanaexp"/>
-	</div>
+  <!-- Esfera -->
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    <h3><img src="img/esferasymbol.png" /> Esfera</h3>
+    <p class="alert alert-info">8 symbols per day (from dailies)</p>
+    <div class="row">
+    <div class="col-md-6">
+      Symbol level:
+      <input ng-model="symbols.esfera.level" type="number"  class="form-control symbol-input" placeholder="Symbol level"/>
+      </div>
+      <div class="col-md-6">
+        Symbol exp:
+        <input ng-model="symbols.esfera.exp" type="number" class="form-control symbol-input" placeholder="Symbol EXP" />
+      </div>
+    </div>
+    <br />
+    <table class="table table-striped" ng-show="symbols.esfera.level > 0 && symbols.esfera.level <= 20">
+      <tr>
+        <th>Level</th>
+        <th>Exp</th>
+        <th>Days left</th>
+      </tr>
+      <tr ng-repeat="(i, exp) in symbol.exp" ng-show="(i+1) > symbols.esfera.level">
+        <td>{{ i + 1 }}</td>
+        <td>{{ exp }}</td>
+        <td>{{ Math.ceil((exp - cummulativeExp(symbols.esfera)) / symbols.esfera.perDay) }}</td>
+      </tr>
+    </table>
+  </div>
+  
 
-	<div id="Symbol" style="text-align: left">
-  		<img style="vertical-align:middle" src="img/morasssymbol.png" alt="">
-  		<span style="vertical-align:middle">Level</span>
-  		<select name="symbollevel" required="true" style="vertical-align:middle" class="input" id = "morasslvl">
-  		  	<option value="1">1</option>
- 			<option value="2">2</option>
-  			<option value="3">3</option>
-  			<option value="4">4</option>
-  			<option value="5">5</option>
-  			<option value="6">6</option>
-  			<option value="7">7</option>
-  			<option value="8">8</option>
-  			<option value="9">9</option>
-  			<option value="10">10</option>
-  			<option value="11">11</option>
-  			<option value="12">12</option>
-  			<option value="13">13</option>
-  			<option value="14">14</option>
-  			<option value="15">15</option>
-  			<option value="16">16</option>
-  			<option value="17">17</option>
-  			<option value="18">18</option>
-  			<option value="19">19</option>
-  			<option value="20">20</option>
-  		</select>
-  		<span style="vertical-align:middle">Current Experience</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "morassexp"/>
-	</div>
 
-	<div id="Symbol" style="text-align: left">
-  		<img style="vertical-align:middle" src="img/esferasymbol.png" alt="">
-  		<span style="vertical-align:middle">Level</span>
-  		<select name="symbollevel" required="true" style="vertical-align:middle" class="input" id = "esferalvl">
-  		  	<option value="1">1</option>
- 			<option value="2">2</option>
-  			<option value="3">3</option>
-  			<option value="4">4</option>
-  			<option value="5">5</option>
-  			<option value="6">6</option>
-  			<option value="7">7</option>
-  			<option value="8">8</option>
-  			<option value="9">9</option>
-  			<option value="10">10</option>
-  			<option value="11">11</option>
-  			<option value="12">12</option>
-  			<option value="13">13</option>
-  			<option value="14">14</option>
-  			<option value="15">15</option>
-  			<option value="16">16</option>
-  			<option value="17">17</option>
-  			<option value="18">18</option>
-  			<option value="19">19</option>
-  			<option value="20">20</option>
-  		</select>
-  		<span style="vertical-align:middle">Current Experience</span>
-  		<input style="vertical-align:middle" type="text" name="field1" required="true" class="input" maxlength="3" id = "esferaexp"/>
-	</div>
 
-	<br>
-	<button id="enter">Calculate</button>
-	<br>
 
-<table id="table" style="border:1px solid black">
-  	<tr>
-	    <td><strong></strong></td>
-	    <td><strong>DAYS</strong></td>
-	    <td><strong>MESOS</strong></td>
-	    <td><strong>SYMBOLS</strong></td>
-    </tr>
- 	<tr>
-	    <td id = left><strong>Vanishing Journey</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
- 	</tr>
- 	<tr>
-	    <td id = left><strong>Chu Chu Island</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-    </tr>
-    <tr>
-	    <td id = left><strong>Lachelein</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-    </tr>
-    <tr>
-	    <td id = left><strong>Arcana</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-    </tr>
-    <tr>
-	    <td id = left><strong>Morass</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-    </tr>
-    <tr>
-	    <td id = left><strong>Esfera</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-    </tr>
-</table>
 
-	<script type="text/javascript" src="script.js"></script>
-</body>
+
+
+</div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+<script src="script.js"></script>
+
+
+
 </html>

@@ -1,18 +1,13 @@
-td{
-	text-align: center;
-	padding: 0px 10px;
-}
-
-table, td, th {
-  border: 1px solid black;
-}
-
-#left{
-	text-align: left;
-}
-
-#header-e1 {float: left;
+#header-e1 {float: right;
 padding-right: 5px;
+padding-left: 10px;
 }
-#header-e2 {overflow: hidden;}
-#header-e3 {float: right;}
+
+#header-e2 {float:right;
+padding:left 5px;
+}
+
+#header-e3 {float:right;
+padding:right 50px;
+padding:left 50px;
+}
